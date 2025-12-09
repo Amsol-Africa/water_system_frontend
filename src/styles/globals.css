@@ -1,0 +1,89 @@
+
+* {
+  @apply transition-base;
+}
+
+html {
+  @apply scroll-smooth;
+  font-feature-settings: 'rlig' 1 'calt' 1;
+}
+
+body {
+  @apply bg-white text-slate-900 antialiased;
+}
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-lg hover:bg-slate-400;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary-500;
+}
+
+/* Selection styles */
+::selection {
+  @apply bg-primary-100 text-primary-900;
+}
+
+/* Utility classes */
+.container-sm {
+  @apply max-w-sm mx-auto px-4;
+}
+
+.container-md {
+  @apply max-w-md mx-auto px-4;
+}
+
+.container-lg {
+  @apply max-w-lg mx-auto px-4;
+}
+
+.container-xl {
+  @apply max-w-2xl mx-auto px-4;
+}
+
+.container-2xl {
+  @apply max-w-4xl mx-auto px-6;
+}
+
+/* Flex utilities */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+/* Text utilities */
+.truncate-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.truncate-lines-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Animations */
+.animate-fade-in {
+  @apply animate-fade-in;
+}
+
+.animate-slide-in {
+  @apply animate-slide-in;
+}
