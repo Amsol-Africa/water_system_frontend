@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x]          # only one version = much less memory pressure
+        node-version: [20.x]         
       max-parallel: 1
     env:
       NODE_OPTIONS: --max-old-space-size=4096
@@ -39,8 +39,11 @@ jobs:
 
       - name: Deploy build to Bitnami
         run: |
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
-          ./build/ bitnami@${{ secrets.EC2_IP }}:/opt/bitnami/projects/water_system_frontend
+          echo "Deploying to bitnami@${{ secrets.EC2_IP }}"
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa" \
+            ./build/ \
+            bitnami@${{ secrets.EC2_IP }}:/opt/bitnami/projects/water_system_frontend
 
       - name: Restart Apache
         run: |
