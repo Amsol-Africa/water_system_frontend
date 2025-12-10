@@ -4,8 +4,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { PrivateRoute } from '@/components/auth'
 import { Layout } from '@/components/layout'
 import { useAuth } from '@/hooks'   
-
-// Pages
 import Login from '@/pages/auth/Login'
 import Dashboard from '@/pages/dashboard/Dashboard'
 import MetersList from '@/pages/meters/MetersList'
