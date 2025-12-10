@@ -1,0 +1,45 @@
+name: Node.js CI & Deploy React to Bitnami
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build --if-present
+
+      # Deploy to EC2
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy build to Bitnami
+        run: |
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
+          ./build/ bitnami@${{ secrets.EC2_IP }}:/opt/bitnami/projects/water_system_frontend
+
+      - name: Restart Apache
+        run: |
+          ssh -o StrictHostKeyChecking=no bitnami@${{ secrets.EC2_IP }} "sudo /opt/bitnami/ctlscript.sh restart apache"
+
