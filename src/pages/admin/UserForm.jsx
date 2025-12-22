@@ -15,39 +15,22 @@ import Alert from '@/components/common/Alert'
 import { ArrowLeft } from 'lucide-react'
 
 const userSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Enter a valid email'),
+  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
   first_name: z.string().optional(),
   last_name: z.string().optional(),
   phone: z.string().optional(),
-  role: z
-    .string()
-    .min(1, 'Role is required'),
+  role: z.string().min(1, 'Role is required'),
   client: z.string().optional().nullable(),
   is_active: z.boolean().default(true),
-  // password only on create
-  password: z
-    .string()
-    .min(6, 'Password must be at least 6 characters')
-    .optional(),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional(),
 })
 
 const UserForm = () => {
   const { id } = useParams()
   const isEdit = id && id !== 'new'
-
   const navigate = useNavigate()
-  const {
-    selectedUser,
-    isLoading,
-    error,
-    getUser,
-    createUser,
-    updateUser,
-    clearError,
-  } = useUserStore()
+
+  const { isLoading, error, getUser, createUser, updateUser, clearError } = useUserStore()
   const { clients, fetchClients } = useClientStore()
 
   const {
@@ -85,7 +68,7 @@ const UserForm = () => {
             phone: u.phone || '',
             role: u.role || '',
             client: u.client || '',
-            is_active: u.is_active,
+            is_active: !!u.is_active,
             password: '',
           })
         }
@@ -99,30 +82,16 @@ const UserForm = () => {
 
   const onSubmit = async (values) => {
     const payload = { ...values }
-    if (!isEdit && !payload.password) {
-      // require password on create
-      return
-    }
-    if (isEdit && !payload.password) {
-      delete payload.password
-    }
-    if (!payload.client) {
-      payload.client = null
-    }
-    let result
-    if (isEdit) {
-      result = await updateUser(id, payload)
-    } else {
-      result = await createUser(payload)
-    }
-    if (result.success) {
-      navigate('/admin/users')
-    }
+
+    if (!isEdit && !payload.password) return
+    if (isEdit && !payload.password) delete payload.password
+    if (!payload.client) payload.client = null
+
+    const result = isEdit ? await updateUser(id, payload) : await createUser(payload)
+    if (result.success) navigate('/admin/users')
   }
 
-  const handleCheckbox = (e) => {
-    setValue('is_active', e.target.checked, { shouldDirty: true })
-  }
+  const handleCheckbox = (e) => setValue('is_active', e.target.checked, { shouldDirty: true })
 
   return (
     <div className="space-y-6">
@@ -135,58 +104,27 @@ const UserForm = () => {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            {isEdit ? 'Edit User' : 'Add User'}
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-900">{isEdit ? 'Edit User' : 'Add User'}</h1>
           <p className="mt-1 text-slate-600">
-            {isEdit
-              ? 'Update user details and access.'
-              : 'Create a new user and assign a role and client.'}
+            Create users under a Client (tenant). Clients (paybill owners) are created in Clients.
           </p>
         </div>
       </div>
 
-      {error && (
-        <Alert
-          type="error"
-          title="Error"
-          message={error}
-          onClose={clearError}
-        />
-      )}
+      {error && <Alert type="error" title="Error" message={error} onClose={clearError} />}
 
       <Card className="max-w-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
-            <Input
-              label="Email"
-              placeholder="user@example.com"
-              error={errors.email?.message}
-              {...register('email')}
-            />
-            <Input
-              label="Phone"
-              placeholder="+2547..."
-              error={errors.phone?.message}
-              {...register('phone')}
-            />
-            <Input
-              label="First Name"
-              error={errors.first_name?.message}
-              {...register('first_name')}
-            />
-            <Input
-              label="Last Name"
-              error={errors.last_name?.message}
-              {...register('last_name')}
-            />
+            <Input label="Email" placeholder="user@example.com" error={errors.email?.message} {...register('email')} />
+            <Input label="Phone" placeholder="+2547..." error={errors.phone?.message} {...register('phone')} />
+            <Input label="First Name" error={errors.first_name?.message} {...register('first_name')} />
+            <Input label="Last Name" error={errors.last_name?.message} {...register('last_name')} />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Role
-              </label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Role</label>
               <select
                 {...register('role')}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -194,20 +132,15 @@ const UserForm = () => {
                 <option value="">Select role...</option>
                 <option value="system_admin">System Admin</option>
                 <option value="client_admin">Client Admin</option>
-                <option value="cashier">Cashier</option>
-                <option value="viewer">Viewer</option>
+                <option value="operator">Operator</option>
+                <option value="field_engineer">Field Engineer</option>
+                <option value="read_only">Read Only Viewer</option>
               </select>
-              {errors.role && (
-                <p className="mt-1 text-xs text-red-600">
-                  {errors.role.message}
-                </p>
-              )}
+              {errors.role && <p className="mt-1 text-xs text-red-600">{errors.role.message}</p>}
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Client (Tenant)
-              </label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Client (Tenant)</label>
               <select
                 {...register('client')}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -222,7 +155,6 @@ const UserForm = () => {
             </div>
           </div>
 
-          {/* Password section */}
           <div className="grid gap-4 md:grid-cols-2">
             <Input
               label={isEdit ? 'New Password (optional)' : 'Password'}
@@ -244,14 +176,10 @@ const UserForm = () => {
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate('/admin/users')}
-            >
+            <Button type="button" variant="outline" onClick={() => navigate('/admin/users')}>
               Cancel
             </Button>
-            <Button type="submit" isLoading={isLoading} disabled={isLoading}>
+            <Button type="submit" isLoading={isLoading} disabled={isLoading || !isDirty}>
               {isEdit ? 'Save Changes' : 'Create User'}
             </Button>
           </div>

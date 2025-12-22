@@ -1,5 +1,5 @@
 // ============================================
-// FILE 4: src/pages/auth/Login.jsx
+// FILE: src/pages/auth/Login.jsx
 // ============================================
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -50,7 +50,7 @@ const Login = () => {
         <div className="flex justify-center mb-8">
           <div className="flex items-center space-x-2">
             <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg" />
-            <span className="text-2xl font-bold text-white">Amsol</span>
+            <span className="text-2xl font-bold text-white">Amsol Water Vending System</span>
           </div>
         </div>
 
@@ -93,26 +93,9 @@ const Login = () => {
               Sign In
             </Button>
           </form>
+          
 
-          {/* Demo mode */}
-          <div className="mt-6 pt-6 border-t border-slate-200">
-            <p className="text-center text-sm text-slate-600 mb-3">
-              Demo Mode (Local Development)
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={handleDemoLogin}
-              isLoading={isLoading}
-            >
-              Login with Demo Credentials
-            </Button>
-            <p className="text-xs text-slate-500 mt-3 text-center">
-              Email: admin@amsol.com | Password: password123
-            </p>
-          </div>
-        </div>
+        </div>  
 
         {/* Footer */}
         <p className="text-center text-slate-400 text-sm mt-6">

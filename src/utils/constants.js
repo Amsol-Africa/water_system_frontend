@@ -99,5 +99,6 @@ export const MOBILE_NAVIGATION_ITEMS = [
 
 export const ADMIN_NAVIGATION_ITEMS = [
   { name: 'User Management', href: '/admin/users', icon: 'UserPlus' },
+  { name: 'Client Management', href: '/admin/clients', icon: 'BuildingOffice' },
   { name: 'System Settings', href: '/admin/settings', icon: 'SlidersHorizontal' },
 ]

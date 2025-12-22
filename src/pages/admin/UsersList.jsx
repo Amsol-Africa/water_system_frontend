@@ -97,7 +97,7 @@ const UsersList = () => {
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Users</h1>
           <p className="mt-1 text-slate-600">
-            Manage system admins, client admins, cashiers, and viewers.
+             Manage system admins, client admins, operators, engineers, and read-only users.
           </p>
         </div>
         <Button
@@ -142,8 +142,9 @@ const UsersList = () => {
               <option value="">All Roles</option>
               <option value="system_admin">System Admin</option>
               <option value="client_admin">Client Admin</option>
-              <option value="cashier">Cashier</option>
-              <option value="viewer">Viewer</option>
+              <option value="operator">Operator</option>
+              <option value="field_engineer">Field Engineer</option>
+              <option value="read_only">Read Only Viewer</option>
             </select>
           </div>
           <div>
